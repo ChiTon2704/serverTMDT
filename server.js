@@ -4,7 +4,6 @@ const server = express(); // tạo server
 
 const mongoose = require('mongoose')
 
-
 //connect database
 mongoose.connect('mongodb+srv://admin:admin@tmdtdb-k3zc8.mongodb.net/test?retryWrites=true&w=majority', { useUnifiedTopology: true })
     .then(() => console.log('Connect Sucess !'))
@@ -13,9 +12,12 @@ mongoose.connect('mongodb+srv://admin:admin@tmdtdb-k3zc8.mongodb.net/test?retryW
 server.use(cors()); //sử dụng
 
 //  Router
+const ProviderInfo =require('./modules/ProviderInfo');
 const Phone = require('./modules/Phone');
 server.use(express.json()); //khai báo để sử dụng json
 
+
+// server.use('/api/',ProviderInfo)
 server.use('/api', Phone)
 
 server.listen(7000, () => {

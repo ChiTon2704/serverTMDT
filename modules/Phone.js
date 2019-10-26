@@ -25,10 +25,23 @@ router.post("/phone", (req, res) => {
 
 
 //get all
-router.get("/phones", (req, res) => {
+//sua thanh post de phu hop vs dataprovider
+router.post("/phones", (req, res) => {
+    const {pagination,sort,filter} = req.body
+    let perPage = 0;
+    let skip = 0;
+    if(pagination){
+        perPage = pagination.perPage
+        skip =  (pagination.page-1)*perPage
+    }
     Phone.find()
+    .limit(perPage)
+    .skip(skip)
         .then((result) => {
-            res.send(result)
+            Phone.count()
+            .then(count=>{
+                res.send({phone:result,count})
+            })
         })
 })
 //get phone with category= oppo
@@ -85,7 +98,7 @@ router.get("/phones/nokia", (req, res) => {
 router.get("/phone/:id", (req, res) => {
     Phone.findById(req.params.id)
         .then((result) => {
-            res.send(result);
+            res.send({result});
         })
 })
 
