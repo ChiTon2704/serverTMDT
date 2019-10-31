@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
-const { ProviderInfo } = require('./ProviderInfo');
+const { SaleSchema } = require('./Sale');
 const PhoneSchema = new mongoose.Schema(
     {
         name_phone: String,
-        category: String,
-        NB: Boolean,
-        discount: Number,
+        brand: String,
+        sale: Number,
         description: String,
         img: String,
-        sale: Boolean,
+        is_sale: Boolean,
+        is_new: Boolean,
         price: Number,
-        providerInfo: {
-            type:{ProviderInfo}
-        }
     }
 )
 const Phone = mongoose.model('Phone', PhoneSchema);
