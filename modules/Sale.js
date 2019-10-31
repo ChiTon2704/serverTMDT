@@ -1,7 +1,6 @@
 const express = require('express');// khai báo express   npm i express
 const router = express.Router();
 const { Sale } = require('../models/Sale')
-
 //create sale
 router.post("/createSale", (req, res) => {
     const sale = new Sale({
@@ -62,6 +61,18 @@ router.post("/deleteSale/:id", (req, res) => {
             console.log("sale deleted !");
             res.send({ result });
         })
+})
+
+//get sales
+router.post("/getSaleFromArray",(req,res)=>{
+    const {ids}=req.body
+    Sale.find({_id:ids})
+    .then(Sales =>{
+        return res.status(200).send({data: Sales})
+    }).catch((error)=>{
+        console.log(error)
+        return res.status(400);
+    })
 })
 
 module.exports = router;

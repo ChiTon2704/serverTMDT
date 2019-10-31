@@ -1,16 +1,12 @@
 const express = require('express');// khai báo express   npm i express
 const router = express.Router();
 const { Customer } = require('../models/Customer')
-
-
-
-
 //create customer
 router.post("/createCustomer", (req, res) => {
     const customer = new Customer({
         name_customer: req.body.name_customer,
         phone_customer: req.body.phone_customer,
-        address_customer: req.body.address_customer
+        address_customer: req.body.address_customer,
     })
     customer.save()
         .then((result) => {
@@ -18,8 +14,6 @@ router.post("/createCustomer", (req, res) => {
             res.send({ result });
         })
 })
-
-
 //get all customer
 router.post("/getCustomers", (req, res) => {
     const { pagination, sort, filter } = req.body
@@ -72,4 +66,17 @@ router.post("/deleteCustomer/:id", (req, res) => {
             res.send({ result });
         })
 })
+
+//get customers
+router.post("/getCustomerFromArray",(req,res)=>{
+    const {ids}=req.body
+    Customer.find({_id:ids})
+    .then(Customers =>{
+        return res.status(200).send({data: Customers})
+    }).catch((error)=>{
+        console.log(error)
+        return res.status(400);
+    })
+})
+
 module.exports = router;

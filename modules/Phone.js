@@ -1,6 +1,7 @@
 const express = require('express');// khai báo express   npm i express
 const router = express.Router();
 const { Phone } = require('../models/Phone');
+ObjectId = require("mongoose").Types.ObjectId;
 //get phone with category= oppo
 router.get("/phones/oppo", (req, res) => {
     Phone.find({
@@ -58,12 +59,7 @@ router.post("/createPhone", (req, res) => {
         name_phone: req.body.name_phone,
         price: req.body.price,
         brand: req.body.brand,
-        sale: [
-            {
-                name_sale:req.body.sale,
-                price_sale:req.body.sale
-            }
-        ],
+        sale: ObjectId(sale),
         description: req.body.description,
         img: req.body.img,
         is_sale: req.body.is_sale,
@@ -130,4 +126,17 @@ router.post("/deletePhone/:id", (req, res) => {
         res.send({result});
     })
 })
+
+//get phones
+router.post("/getPhoneFromArray",(req,res)=>{
+    const {ids}=req.body
+    Phone.find({_id:ids})
+    .then(Phones =>{
+        return res.status(200).send({data: Phones})
+    }).catch((error)=>{
+        console.log(error)
+        return res.status(400);
+    })
+})
+
 module.exports = router;
