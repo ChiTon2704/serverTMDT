@@ -58,7 +58,12 @@ router.post("/createPhone", (req, res) => {
         name_phone: req.body.name_phone,
         price: req.body.price,
         brand: req.body.brand,
-        sale: req.body.sale,
+        sale: [
+            {
+                name_sale:req.body.sale,
+                price_sale:req.body.sale
+            }
+        ],
         description: req.body.description,
         img: req.body.img,
         is_sale: req.body.is_sale,
@@ -93,7 +98,7 @@ router.post("/getPhones", (req, res) => {
         .then((result) => {
             Phone.count()
                 .then(count => {
-                    res.send({ result, count })
+                    res.send({phone: result, count })
                 })
         })
 })

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const { SaleSchema } = require('./Sale');
+const {SaleSchema} = require('./Sale');
 const PhoneSchema = new mongoose.Schema(
     {
         name_phone: String,
         brand: String,
-        sale: Number,
+        sale: [SaleSchema],
         description: String,
         img: String,
         is_sale: Boolean,
