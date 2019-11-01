@@ -10,6 +10,7 @@ const PhoneSchema = new mongoose.Schema(
         is_sale: Boolean,
         is_new: Boolean,
         price: Number,
+        quantity:Number
     }
 )
 const Phone = mongoose.model('Phone', PhoneSchema);

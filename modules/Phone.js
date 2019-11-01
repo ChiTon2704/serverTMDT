@@ -1,55 +1,9 @@
 const express = require('express');// khai báo express   npm i express
 const router = express.Router();
 const { Phone } = require('../models/Phone');
-//get phone with category= oppo
-router.get("/phones/oppo", (req, res) => {
-    Phone.find({
-        "category": "Oppo"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/iphone", (req, res) => {
-    Phone.find({
-        "category": "Iphone"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/samsung", (req, res) => {
-    Phone.find({
-        "category": "Samsung"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/xiaomi", (req, res) => {
-    Phone.find({
-        "category": "Xiaomi"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/huawei", (req, res) => {
-    Phone.find({
-        "category": "Huawei"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/nokia", (req, res) => {
-    Phone.find({
-        "category": "Nokia"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
+const { Cart } = require('../models/Cart');
+
+
 
 //create one phone
 router.post("/createPhone", (req, res) => {
@@ -63,6 +17,7 @@ router.post("/createPhone", (req, res) => {
         img: req.body.img,
         is_sale: req.body.is_sale,
         is_new: req.body.is_new,
+        quantity:req.body.quantity
     });
     phone.save()
         .then((result) => {
@@ -125,4 +80,61 @@ router.post("/deletePhone/:id", (req, res) => {
         res.send({result});
     })
 })
+
+
+
+//      hiện trên giao diện người dùng
+
+//get all
+//sua thanh post de phu hop vs dataprovider
+router.post("/phone/getallphones", (req, res) => {
+    Phone.find()
+        .then((result) => {
+            res.send(result)
+        })
+})
+
+
+//lay thong tin 1 san pham
+router.post("/phone/getphone/:id", (req, res) => {
+    Phone.findById(req.params.id)
+        .then((result) => {
+            res.send(result);
+        })
+})
+
+//create them 1 sản phẩm mới vào cart
+router.post("/phone/additemcart/:id", (req, res) => {
+    //tao provider moi
+    const newItemPhone = new Phone({
+        name_phone: req.body.name_phone,
+        price: req.body.price,
+        brand: req.body.brand,
+        sale: req.body.sale,
+        description: req.body.description,
+        img: req.body.img,
+        is_sale: req.body.is_sale,
+        is_new: req.body.is_new,
+         quantity:req.body.quantity
+
+    })
+    Cart.findByIdAndUpdate(req.params.id, {
+        $addToSet: {
+            items: newItemPhone
+        }
+    })
+        .then((result) => {
+            console.log('add item in cart success !');
+            res.send(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+})
+
+
+
+
+
+
 module.exports = router;
