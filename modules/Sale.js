@@ -62,7 +62,6 @@ router.post("/deleteSale/:id", (req, res) => {
             res.send({ result });
         })
 })
-
 //get sales
 router.post("/getSaleFromArray",(req,res)=>{
     const {ids}=req.body

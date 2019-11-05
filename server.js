@@ -14,16 +14,16 @@ server.use(cors()); //sử dụng
 //  Router
 const Phone = require('./modules/Phone');
 const Sale = require('./modules/Sale');
-const Customer = require('./modules/Customer')
-const Ordered = require('./modules/Ordered')
+const Customer = require('./modules/Customer');
+const Bill = require('./modules/Bill');
 server.use(express.json()); //khai báo để sử dụng json
 
 
-// server.use('/api/',ProviderInfo)
 server.use('/api', Phone);
 server.use('/api', Sale);
 server.use('/api',Customer);
-server.use('/api',Ordered);
+server.use('/api',Bill);
+
 
 server.listen(7000, () => {
     console.log('Listen at port 7000')

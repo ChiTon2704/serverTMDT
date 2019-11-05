@@ -2,55 +2,6 @@ const express = require('express');// khai báo express   npm i express
 const router = express.Router();
 const { Phone } = require('../models/Phone');
 ObjectId = require("mongoose").Types.ObjectId;
-//get phone with category= oppo
-router.get("/phones/oppo", (req, res) => {
-    Phone.find({
-        "category": "Oppo"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/iphone", (req, res) => {
-    Phone.find({
-        "category": "Iphone"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/samsung", (req, res) => {
-    Phone.find({
-        "category": "Samsung"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/xiaomi", (req, res) => {
-    Phone.find({
-        "category": "Xiaomi"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/huawei", (req, res) => {
-    Phone.find({
-        "category": "Huawei"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
-router.get("/phones/nokia", (req, res) => {
-    Phone.find({
-        "category": "Nokia"
-    })
-        .then((result) => {
-            res.send(result)
-        })
-})
 
 //create one phone
 router.post("/createPhone", (req, res) => {
@@ -59,7 +10,7 @@ router.post("/createPhone", (req, res) => {
         name_phone: req.body.name_phone,
         price: req.body.price,
         brand: req.body.brand,
-        sale: ObjectId(sale),
+        sale: req.body.sale,
         description: req.body.description,
         img: req.body.img,
         is_sale: req.body.is_sale,
@@ -89,6 +40,7 @@ router.post("/getPhones", (req, res) => {
         skip = (pagination.page - 1) * perPage
     }
     Phone.find()
+        // .populate('sale')
         .limit(perPage)
         .skip(skip)
         .then((result) => {
