@@ -1,7 +1,11 @@
 const express = require('express');// khai báo express   npm i express
 const router = express.Router();
 const { Phone } = require('../models/Phone');
+
 const { Cart } = require('../models/Cart');
+
+
+ObjectId = require("mongoose").Types.ObjectId;
 
 
 
@@ -12,7 +16,7 @@ router.post("/createPhone", (req, res) => {
         name_phone: req.body.name_phone,
         price: req.body.price,
         brand: req.body.brand,
-        sale: req.body.sale,
+        sale: ObjectId(sale),
         description: req.body.description,
         img: req.body.img,
         is_sale: req.body.is_sale,
@@ -43,12 +47,13 @@ router.post("/getPhones", (req, res) => {
         skip = (pagination.page - 1) * perPage
     }
     Phone.find()
+        .populate('sale')
         .limit(perPage)
         .skip(skip)
         .then((result) => {
             Phone.count()
                 .then(count => {
-                    res.send({ result, count })
+                    res.send({phone: result, count })
                 })
         })
 })
@@ -135,6 +140,16 @@ router.post("/phone/additemcart/:id", (req, res) => {
 
 
 
-
+//get phones
+router.post("/getPhoneFromArray",(req,res)=>{
+    const {ids}=req.body
+    Phone.find({_id:ids})
+    .then(Phones =>{
+        return res.status(200).send({data: Phones})
+    }).catch((error)=>{
+        console.log(error)
+        return res.status(400);
+    })
+})
 
 module.exports = router;
