@@ -10,7 +10,7 @@ router.post("/createPhone", (req, res) => {
         name_phone: req.body.name_phone,
         price: req.body.price,
         brand: req.body.brand,
-        sale: req.body.sale,
+        sale: ObjectId(sale),
         description: req.body.description,
         img: req.body.img,
         is_sale: req.body.is_sale,
@@ -25,14 +25,15 @@ router.post("/createPhone", (req, res) => {
 //get one phone
 router.post("/getPhone/:id", (req, res) => {
     Phone.findById(req.params.id)
+    .populate('sale')
         .then((result) => {
             res.send({result});
         })
 })
-
 //get all phones
 router.post("/getPhones", (req, res) => {
     const { pagination } = req.body
+    console.log(pagination);
     let perPage = 0;
     let skip = 0;
     if (pagination) {
@@ -40,7 +41,7 @@ router.post("/getPhones", (req, res) => {
         skip = (pagination.page - 1) * perPage
     }
     Phone.find()
-        // .populate('sale')
+        .populate('sale')
         .limit(perPage)
         .skip(skip)
         .then((result) => {
@@ -73,16 +74,18 @@ router.post("/deletePhone/:id", (req, res) => {
         if (err) {
             res.send(err);
         }
-    }).then((result) => {
+    })
+    .populate('sale')
+    .then((result) => {
         console.log("phone deleted !");
         res.send({result});
     })
 })
-
 //get phones
 router.post("/getPhoneFromArray",(req,res)=>{
     const {ids}=req.body
     Phone.find({_id:ids})
+    .populate('sale')
     .then(Phones =>{
         return res.status(200).send({data: Phones})
     }).catch((error)=>{
@@ -90,5 +93,4 @@ router.post("/getPhoneFromArray",(req,res)=>{
         return res.status(400);
     })
 })
-
 module.exports = router;
