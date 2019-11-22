@@ -26,6 +26,7 @@ router.post("/getBills", (req, res) => {
         skip = (pagination.page - 1) * perPage
     }
     Bill.find()
+        .populate('Customer')
         .limit(perPage)
         .skip(skip)
         .then((result) => {
