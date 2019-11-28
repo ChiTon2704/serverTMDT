@@ -4,12 +4,7 @@ const { Bill } = require('../models/Bill')
 const {BillDetail}=require('../models/billDetail')
 //create Bill
 router.post("/createBill", (req, res) => {
-    const {address,date}=req.body
-    const billDetail = [{
-        phoneId:"5db1821c7627db2ce419b59a",
-        price:3000000,
-        quantity:1,
-    }]
+    const {customer,billDetail=[],date,deliveryState}=req.body
     console.log(billDetail)
     if(billDetail.length>0){
         billDetail.forEach(element => {
@@ -20,9 +15,10 @@ router.post("/createBill", (req, res) => {
             let detail = []
             result.forEach(element => detail.push(element._id))
             const newBill = new Bill({  
-                address,
+                customer,
                 billDetail:detail,
-                date
+                date: date ? date : new Date(),
+                deliveryState: deliveryState ? 'ORDER_PAY_BY_PAYPAL' : 'ORDER'
             })
             newBill.save()
             .then(bill => {
