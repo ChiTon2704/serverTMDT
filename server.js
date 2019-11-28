@@ -14,6 +14,7 @@ server.use(cors()); //sử dụng
 //  Router
 const Phone = require('./modules/Phone');
 const Sale = require('./modules/Sale');
+const Cart =require('./modules/Cart');
 const Customer = require('./modules/Customer');
 const Bill = require('./modules/Bill');
 server.use(express.json()); //khai báo để sử dụng json
@@ -22,6 +23,7 @@ server.use(express.json()); //khai báo để sử dụng json
 server.use('/api', Phone);
 server.use('/api', Sale);
 server.use('/api',Customer);
+server.use('/api/cart',Cart)
 server.use('/api',Bill);
 
 
