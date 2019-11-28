@@ -5,12 +5,11 @@ ObjectId = require("mongoose").Types.ObjectId;
 
 //create one phone
 router.post("/createPhone", (req, res) => {
-    //tao phone moi
     const phone = new Phone({
         name_phone: req.body.name_phone,
         price: req.body.price,
         brand: req.body.brand,
-        sale: ObjectId(sale),
+        sale: ObjectId(req.body.sale._id),
         description: req.body.description,
         img: req.body.img,
         is_sale: req.body.is_sale,
@@ -75,7 +74,6 @@ router.post("/deletePhone/:id", (req, res) => {
             res.send(err);
         }
     })
-    .populate('sale')
     .then((result) => {
         console.log("phone deleted !");
         res.send({result});

@@ -3,10 +3,13 @@ const Schema = mongoose.Schema;
 const BillSchema = new mongoose.Schema(
     {
         date: Date,
-        price: Number,
-        quantity: Number,
-        total: Number,
-        customer: { type: Schema.Types.ObjectId, ref: 'Customer' },
+        address: String,
+        billDetail: [{ type: Schema.Types.ObjectId, ref: 'BillDetail' }],
+        deliveryState: 
+        {
+            type:String,
+            default: 'ORDER'
+        }
     }
 )
 const Bill = mongoose.model('Bill', BillSchema);

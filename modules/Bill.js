@@ -1,83 +1,74 @@
 const express = require('express');// khai báo express   npm i express
 const router = express.Router();
 const { Bill } = require('../models/Bill')
+const {BillDetail}=require('../models/billDetail')
 //create Bill
 router.post("/createBill", (req, res) => {
-    const bill = new Bill({
-        date: req.body.date,
-        price: req.body.price,
-        quantity: req.body.quantity,
-        total: req.body.price * req.body.quantity,
-        customer: req.body.customer,
-    })
-    bill.save()
+    const {address,date}=req.body
+    const billDetail = [{
+        phoneId:"5db1821c7627db2ce419b59a",
+        price:3000000,
+        quantity:1,
+    }]
+    console.log(billDetail)
+    if(billDetail.length>0){
+        billDetail.forEach(element => {
+            element.phone = ObjectId(element.phoneId)
+        });
+        BillDetail.insertMany(billDetail)
         .then((result) => {
-            console.log("Bill created !")
-            res.send({ result });
-        })
+            let detail = []
+            result.forEach(element => detail.push(element._id))
+            const newBill = new Bill({  
+                address,
+                billDetail:detail,
+                date
+            })
+            newBill.save()
+            .then(bill => {
+                console.log(bill)
+                return res.status(200).send(bill)
+            })
+            .catch(err => {
+                console.log(err)
+                return res.status(401).send(err)
+            })
+        }).catch((err) => {
+            return res.status(401).send(err)
+        });
+    } else res.status(401).send("Can't create empty bill")
 })
 //get all Bill
-router.post("/getBills", (req, res) => {
-    const { pagination, sort, filter } = req.body
-    let perPage = 0;
-    let skip = 0;
-    if (pagination) {
-        perPage = pagination.perPage
-        skip = (pagination.page - 1) * perPage
-    }
+router.post('/getBills',((req,res) => { 
     Bill.find()
-        .populate('Customer')
-        .limit(perPage)
-        .skip(skip)
-        .then((result) => {
-            Bill.count()
-                .then(count => {
-                    res.send({ Bill: result, count })
-                })
+    .sort({ createAt: -1})
+    .then(result => {
+        Bill.count().then(count=>{
+            return res.status(200).send({bill:result,count})
         })
-})
+    })
+}))
 // get one Bill
-router.post("/getBill/:id", (req, res) => {
-    Bill.findById(req.params.id)
-        .then((result) => {
-            res.send({ result });
+router.post('/getBill',(req,res)=>{
+    console.log(req.body)
+    Bill.findById(req.body.id)
+    .sort({ createAt: -1})
+    .then(result => {
+        BillDetail.find({_id:result.billDetail}).then(detail=>{
+            let price = 0;
+            detail.map(element => price += Number(element.price)*Number(element.quantity))
+            const newResult = {...result._doc,totalPay:price}
+            return res.status(200).send({data:newResult})
         })
-})
-// update one Bill
-router.post("/updateBill/:id", (req, res) => {
-    Bill.findByIdAndUpdate(req.params.id, {
-        date: req.body.data.date,
-        price: req.body.data.price,
-        quantity: req.body.data.quantity,
-        total: req.body.data.total,
-        customer:req.body.data.customer
     })
-        .then((result) => {
-            console.log("Bill updated !");
-            res.send({ result });
-        })
 })
-//delete Bill
-router.post("/deleteBill/:id", (req, res) => {
-    Bill.findByIdAndDelete(req.params.id, {
-        if(err) {
-            res.send(err);
-        }
-    })
-        .then((result) => {
-            console.log("Bill deleted !");
-            res.send({ result });
-        })
-})
-//get orders
-router.post("/getBillFromArray",(req,res)=>{
-    const {ids}=req.body
-    Bill.find({_id:ids})
-    .then(Bills =>{
-        return res.status(200).send({data: Bills})
-    }).catch((error)=>{
-        console.log(error)
-        return res.status(400);
-    })
+//get bills
+router.post('/getBillDetailByArray',(req,res)=>{
+    BillDetail.find({_id:req.body.ids})
+    .sort({ createAt: -1})
+    .populate('phone')
+    .then(result => {
+        return res.status(200).send({data:result,total:result.length})
+    }) 
 })
 module.exports = router;

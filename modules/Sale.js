@@ -73,5 +73,4 @@ router.post("/getSaleFromArray",(req,res)=>{
         return res.status(400);
     })
 })
-
 module.exports = router;
